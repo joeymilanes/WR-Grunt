@@ -1,6 +1,5 @@
 module.exports = function(grunt) {
 
-  // Project configuration.
 function loadConfig(path) {
   var glob = require('glob');
   var object = {};
@@ -14,20 +13,20 @@ function loadConfig(path) {
   return object;
 }
 
-
 var config = {
   pkg: grunt.file.readJSON('package.json'),
   env: process.env
 };
+
+grunt.loadTasks('tasks');
  
 grunt.util._.extend(config, loadConfig('./tasks/options/'));
  
 grunt.initConfig(config);
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+require('load-grunt-tasks')(grunt);
+// require('load-grunt-tasks')(grunt);
 
   // Default task(s).
-  grunt.registerTask('default', ['uglify']);
-
+grunt.registerTask('default', ['concat', 'uglify', 'watch']);
 };
