@@ -1,15 +1,28 @@
 module.exports = function(grunt) {
 
   // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    uglify: {
-      build: {
-        src: 'js/WRR_main.js',
-        dest: 'js/WRR_main.min.js'
-      }
-    }
+function loadConfig(path) {
+  var glob = require('glob');
+  var object = {};
+  var key;
+ 
+  glob.sync('*', {cwd: path}).forEach(function(option) {
+    key = option.replace(/\.js$/,'');
+    object[key] = require(path + option);
   });
+ 
+  return object;
+}
+
+
+var config = {
+  pkg: grunt.file.readJSON('package.json'),
+  env: process.env
+};
+ 
+grunt.util._.extend(config, loadConfig('./tasks/options/'));
+ 
+grunt.initConfig(config);
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');
